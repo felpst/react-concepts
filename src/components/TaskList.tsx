@@ -14,16 +14,34 @@ export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
-  function handleCreateNewTask() {
+  function handleCreateNewTask(title: string) {
     // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
+    if(!newTaskTitle) {
+      return;
+    }
+    const task = {
+      id: Math.random(),
+      title: newTaskTitle,
+      isComplete: false
+    }
+
+    setTasks(oldState => [...oldState, task]); // Aqui o setTaks() está sendo usado com um callback. Eu estou pegando a versão atual de tasks (que estou chamando de oldSate), e transformando
+    setNewTaskTitle('');
   }
 
   function handleToggleTaskCompletion(id: number) {
     // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
+    const updatedTasks = tasks.map(task => task.id === id ? {
+      ...task,
+      isComplete: !task.isComplete // Eu estou pegando uma task e alterando o isComplete dela para o valor oposto ao que está atualmente.
+    } : task);
+    setTasks(updatedTasks);
   }
 
   function handleRemoveTask(id: number) {
     // Remova uma task da listagem pelo ID
+    const updatedTasks = tasks.filter(task => task.id !== id);
+    setTasks(updatedTasks);
   }
 
   return (
